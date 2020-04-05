@@ -1,0 +1,42 @@
+# Contributor: Richard Patel <me@terorie.dev>
+# Maintainer: John Kerl <kerl.john.r@gmail.com>
+pkgname=miller
+pkgver="5.7.0"
+_ver=${pkgver/_/}
+pkgrel=0
+pkgdesc="Name-indexed data processing tool"
+url=http://johnkerl.org/miller/doc/
+arch="all"
+license="BSD-2-Clause"
+depends=""
+makedepends="autoconf automake libtool flex diffutils patchutils tzdata"
+install=""
+subpackages="$pkgname-doc"
+source="$pkgname-$_ver.tar.gz::https://github.com/johnkerl/miller/archive/v${_ver}.tar.gz
+	"
+
+builddir="$srcdir/miller-$_ver"
+
+build() {
+	cd "$builddir"
+	autoreconf -fiv
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--mandir=/usr/share/man \
+		--disable-static
+	make
+}
+
+check() {
+	cd "$builddir"
+	make check
+}
+
+package() {
+	cd "$builddir"
+	make install DESTDIR="$pkgdir"
+}
+
+sha512sums="fabb101c509e6f3a6212e1719a4cde487b3bf0a7d005ef27d2124ee6f4587f7c6cb3bf9dd97dbedca0ee4b8e9e27522ab7d2f8a759068011455a6091cdafb6cf  miller-5.7.0.tar.gz"
